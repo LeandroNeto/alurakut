@@ -2,6 +2,7 @@ import React from 'react';
 import MainGrid from '../src/components/MainGrid'
 import Box from '../src/components/Box'
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
+import { ProfileDepositionBoxWrapper } from '../src/components/Depositions'
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 
 function ProfileSideBar(propriedades) {
@@ -155,6 +156,81 @@ export default function Home() {
                 Criar Comunidade
               </button>
             </form>
+          </Box>
+
+          <Box>
+            <h2 className="subTitle">Deixe seu depoimento</h2>
+            <form onSubmit={function handleCriaDepoimento(e) {
+              e.preventDefault();
+              const dadosDoForm = new FormData(e.target);
+
+              const depoimento = {
+                deposition: dadosDoForm.get('deposition'),
+                imageUrl: dadosDoForm.get('image'),
+                namePerson: dadosDoForm.get('name'),
+              }
+
+              /*fetch('/api/comunidades', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(comunidade),
+              })
+                .then(async (response) => {
+                  const dados = await response.json();
+                  const comunidade = dados.registroCriado;
+                  const comunidadesAtualizadas = [...comunidades, comunidade];
+                  setComunidades(comunidadesAtualizadas);
+                })*/
+            }}>
+              <div>
+                <input placeholder="Digite seu nome"
+                  name="image"
+                  aria-label="Digite seu nome"
+                />
+              </div>
+              <div>
+                <input placeholder={`Qual o seu depoimento para ${githubUser}?`}
+                  name="deposition"
+                  aria-label={`Qual o seu depoimento para ${githubUser}?`}
+                  type="text"
+                />
+              </div>
+              <div>
+                <input placeholder="Coloque uma URL para usarmos de foto"
+                  name="image"
+                  aria-label="Coloque uma URL para usarmos de foto"
+                />
+              </div>
+
+              <button>
+                Criar Depoimento
+              </button>
+            </form>
+          </Box>
+
+          <Box>
+            <ProfileDepositionBoxWrapper>
+              <h2 className="subTitle">Depoimento para ele</h2>
+              <ul>
+                {pessoasFavoritas.map((itemAtual) => {
+                  return (
+                    <li key={itemAtual}>
+                      <a href={`/users/${itemAtual}`}>
+                        <img src={`https://github.com/${itemAtual}.png`} />
+                      </a>
+                      <div className="depositionContent">
+                        <span>{itemAtual}</span>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam cum tempora aspernatur facere accusamus praesentium exercitationem nesciunt in, id, est delectus amet possimus nihil perferendis sequi rem suscipit voluptatibus eum!</p>
+
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+
+            </ProfileDepositionBoxWrapper>
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
