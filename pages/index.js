@@ -1,8 +1,10 @@
 import React from 'react';
-import MainGrid from '../src/components/MainGrid'
-import Box from '../src/components/Box'
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
-import { ProfileDepositionBoxWrapper } from '../src/components/Depositions'
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
+import MainGrid from '../src/components/MainGrid';
+import Box from '../src/components/Box';
+import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
+import { ProfileDepositionBoxWrapper } from '../src/components/Depositions';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
 
 function ProfileSideBar(propriedades) {
@@ -45,8 +47,8 @@ function ProfileRelationsBox(propriedades) {
   )
 }
 
-export default function Home() {
-  const githubUser = 'LeandroNeto';
+export default function Home(props) {
+  const usuarioAleatorio = props.githubUser;
   const [comunidades, setComunidades] = React.useState([]);
 
   const pessoasFavoritas = [
@@ -98,10 +100,10 @@ export default function Home() {
 
   return (
     <>
-      <AlurakutMenu githubUser={githubUser} />
+      <AlurakutMenu githubUser={usuarioAleatorio} />
       <MainGrid>
         <div className="profileArea" style={{ gridArea: 'profileArea' }}>
-          <ProfileSideBar githubUser={githubUser} />
+          <ProfileSideBar githubUser={usuarioAleatorio} />
         </div>
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
@@ -121,7 +123,7 @@ export default function Home() {
               const comunidade = {
                 title: dadosDoForm.get('title'),
                 imageUrl: dadosDoForm.get('image'),
-                creatorSlug: githubUser,
+                creatorSlug: usuarioAleatorio,
               }
 
               fetch('/api/comunidades', {
@@ -191,9 +193,9 @@ export default function Home() {
                 />
               </div>
               <div>
-                <input placeholder={`Qual o seu depoimento para ${githubUser}?`}
+                <input placeholder={`Qual o seu depoimento para ${usuarioAleatorio}?`}
                   name="deposition"
-                  aria-label={`Qual o seu depoimento para ${githubUser}?`}
+                  aria-label={`Qual o seu depoimento para ${usuarioAleatorio}?`}
                   type="text"
                 />
               </div>
@@ -275,4 +277,35 @@ export default function Home() {
       </MainGrid>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context)
+  const token = cookies.USER_TOKEN;
+
+  const { githubUser } = jwt.decode(token);
+
+  console.log(token);
+
+  const { isAuthenticated } = await fetch('https://alurakut.vercel.app/api/auth', {
+    headers: {
+      Authorization: token
+    }
+  })
+    .then((resposta) => resposta.json())
+  console.log('isAuthenticated', isAuthenticated)
+  if (!isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
+
+  return {
+    props: {
+      githubUser
+    }, // will be passed to the page component as props
+  }
 }
