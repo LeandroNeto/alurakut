@@ -108,11 +108,28 @@ export default function Home(props) {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
             <h1 className="title">
-              Bem Vindo(a)
+              {`Bem vindo(a) ${usuarioAleatorio}`}
             </h1>
 
             <OrkutNostalgicIconSet />
           </Box>
+
+          <ProfileDepositionBoxWrapper>
+            <h2 className="subTitle">
+              Visitantes Recentes
+            </h2>
+            <ul>
+              {pessoasFavoritas.map((itemAtual) => {
+                return (
+                  <li key={itemAtual}>
+                    <a href={`/users/${itemAtual}`}>
+                      <img src={`https://github.com/${itemAtual}.png`} />
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </ProfileDepositionBoxWrapper>
 
           <Box>
             <h2 className="subTitle">O que você deseja fazer?</h2>
@@ -158,81 +175,6 @@ export default function Home(props) {
                 Criar Comunidade
               </button>
             </form>
-          </Box>
-
-          <Box>
-            <h2 className="subTitle">Deixe seu depoimento</h2>
-            <form onSubmit={function handleCriaDepoimento(e) {
-              e.preventDefault();
-              const dadosDoForm = new FormData(e.target);
-
-              const depoimento = {
-                deposition: dadosDoForm.get('deposition'),
-                imageUrl: dadosDoForm.get('image'),
-                namePerson: dadosDoForm.get('name'),
-              }
-
-              /*fetch('/api/comunidades', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(comunidade),
-              })
-                .then(async (response) => {
-                  const dados = await response.json();
-                  const comunidade = dados.registroCriado;
-                  const comunidadesAtualizadas = [...comunidades, comunidade];
-                  setComunidades(comunidadesAtualizadas);
-                })*/
-            }}>
-              <div>
-                <input placeholder="Digite seu nome"
-                  name="image"
-                  aria-label="Digite seu nome"
-                />
-              </div>
-              <div>
-                <input placeholder={`Qual o seu depoimento para ${usuarioAleatorio}?`}
-                  name="deposition"
-                  aria-label={`Qual o seu depoimento para ${usuarioAleatorio}?`}
-                  type="text"
-                />
-              </div>
-              <div>
-                <input placeholder="Coloque uma URL para usarmos de foto"
-                  name="image"
-                  aria-label="Coloque uma URL para usarmos de foto"
-                />
-              </div>
-
-              <button>
-                Criar Depoimento
-              </button>
-            </form>
-          </Box>
-
-          <Box>
-            <ProfileDepositionBoxWrapper>
-              <h2 className="subTitle">Depoimento para ele</h2>
-              <ul>
-                {pessoasFavoritas.map((itemAtual) => {
-                  return (
-                    <li key={itemAtual}>
-                      <a href={`/users/${itemAtual}`}>
-                        <img src={`https://github.com/${itemAtual}.png`} />
-                      </a>
-                      <div className="depositionContent">
-                        <span>{itemAtual}</span>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam cum tempora aspernatur facere accusamus praesentium exercitationem nesciunt in, id, est delectus amet possimus nihil perferendis sequi rem suscipit voluptatibus eum!</p>
-
-                      </div>
-                    </li>
-                  )
-                })}
-              </ul>
-
-            </ProfileDepositionBoxWrapper>
           </Box>
         </div>
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
@@ -283,7 +225,7 @@ export async function getServerSideProps(context) {
   const cookies = nookies.get(context)
   const token = cookies.USER_TOKEN;
 
-  const { githubUser } = jwt.decode(token);
+
 
   console.log(token);
 
@@ -302,6 +244,8 @@ export async function getServerSideProps(context) {
       }
     }
   }
+
+  const { githubUser } = jwt.decode(token);
 
   return {
     props: {
