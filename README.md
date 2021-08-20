@@ -1,7 +1,7 @@
 # AluraKut
 O Alurakut é um projeto clone da interface do nosso querido Orkut, sinta a nostalgia ao reviver essa época! 💜 
 
-## Sobre
+## Aprendizado
 Minha primeira aplicação utilizando o Next.js, e dentre os vários conteúdos pude aprender sobre:
 - Criação de components com React usando styled-components
 - Realizar o deploy na Vercel
