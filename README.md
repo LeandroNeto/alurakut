@@ -1,4 +1,4 @@
-## AluraKut
+# AluraKut
 O Alurakut é um projeto clone da interface do nosso querido Orkut, sinta a nostalgia ao reviver essa época! 💜 
 
 ## Sobre
